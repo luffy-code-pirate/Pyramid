@@ -11,15 +11,13 @@ import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
-    // Makes environment variables available app-wide.
     ConfigModule.forRoot({ isGlobal: true }),
 
-    // Connects to our SQLite database and registers both entities.
     TypeOrmModule.forRoot({
       type: 'better-sqlite3',
       database: process.env.DATABASE_PATH || 'db.sqlite',
       entities: [User, Task],
-      synchronize: true, // auto-creates tables from entities — fine for dev/assessment
+      synchronize: true,
     }),
 
     AuthModule,
