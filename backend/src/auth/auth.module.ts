@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UsersModule } from '../users/users.module';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Module({
   imports: [
@@ -25,9 +26,9 @@ import { UsersModule } from '../users/users.module';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+   providers: [AuthService, JwtAuthGuard],
   // Exporting JwtModule lets other modules (like UsersModule, for
   // its guard) verify tokens too, without redefining JWT config.
-  exports: [JwtModule],
+  exports: [JwtModule, JwtAuthGuard],
 })
 export class AuthModule {}
