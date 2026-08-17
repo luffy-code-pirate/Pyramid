@@ -1,16 +1,19 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { UsersService } from './users.service';
+import { UsersController } from './users.controller';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  // This registers the User entity's repository with this module,
-  // which is what allows @InjectRepository(User) inside UsersService
-  // to actually receive a working repository instance.
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [
+    TypeOrmModule.forFeature([User]),
+    // forwardRef because AuthModule also imports UsersModule —
+    // this breaks the circular dependency deadlock.
+    forwardRef(() => AuthModule),
+  ],
+  controllers: [UsersController],
   providers: [UsersService],
-  // Exporting UsersService lets other modules (like AuthModule)
-  // import UsersModule and use this service.
   exports: [UsersService],
 })
 export class UsersModule {}
