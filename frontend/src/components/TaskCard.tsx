@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Task } from '@/lib/types';
 import { PriorityBadge } from './PriorityBadge';
 
@@ -12,9 +13,12 @@ export function TaskCard({ task, onDelete }: TaskCardProps) {
   return (
     <div className="bg-background border border-border rounded-lg p-3 hover:shadow-sm transition-shadow group">
       <div className="flex items-start justify-between gap-2">
-        <p className="text-sm text-foreground font-medium leading-snug">
+        <Link
+          href={`/tasks/${task.id}`}
+          className="text-sm text-foreground font-medium leading-snug hover:underline"
+        >
           {task.title}
-        </p>
+        </Link>
         {/* Delete button only shows on hover — keeps cards visually
             clean until the user actually needs the action. */}
         <button

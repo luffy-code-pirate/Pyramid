@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { useTasks } from '@/hooks/use-tasks';
 import { Task, TaskStatus } from '@/lib/types';
 import { PriorityBadge } from '@/components/PriorityBadge';
@@ -35,9 +36,6 @@ export default function TasksPage() {
     await updateTask(task.id, { status: newStatus });
   }
 
-  // Shared create handler passed down to TaskBoard — same
-  // underlying createTask call the list view uses, just with
-  // arguments shaped for the board's per-column "add" inputs.
   async function handleBoardCreate(status: TaskStatus, title: string) {
     await createTask({ title, status });
   }
@@ -63,7 +61,6 @@ export default function TasksPage() {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-semibold text-foreground">Tasks</h1>
 
-        {/* List/Board toggle, matching the Figma's switcher control */}
         <div className="flex items-center bg-surface border border-border rounded-lg p-0.5">
           <button
             onClick={() => setView('list')}
@@ -121,9 +118,12 @@ export default function TasksPage() {
                     key={task.id}
                     className="flex items-center gap-4 px-4 py-3 border-t border-border hover:bg-surface transition-colors"
                   >
-                    <span className="flex-1 text-sm text-foreground truncate">
+                    <Link
+                      href={`/tasks/${task.id}`}
+                      className="flex-1 text-sm text-foreground truncate hover:underline"
+                    >
                       {task.title}
-                    </span>
+                    </Link>
                     <span className="w-24">
                       <PriorityBadge priority={task.priority} />
                     </span>
