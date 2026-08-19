@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/context/auth-context";
+import { ThemeProvider } from "@/context/theme-context";
 
 export const metadata: Metadata = {
   title: "Pyramid — Task Management",
@@ -15,12 +16,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {/* AuthProvider wraps the ENTIRE app here, at the root
-            layout level. This means every single page and
-            component anywhere in the app can call useAuth()
-            and get the current user, without needing to be
-            individually wrapped or passed props manually. */}
-        <AuthProvider>{children}</AuthProvider>
+        {/* Order matters here: ThemeProvider reads user.theme and
+            user.colorMode from AuthContext (via useAuth()), so
+            AuthProvider MUST wrap ThemeProvider — not the other
+            way around. If reversed, useAuth() inside ThemeProvider
+            would fail since there'd be no AuthContext above it. */}
+        <AuthProvider>
+          <ThemeProvider>{children}</ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );

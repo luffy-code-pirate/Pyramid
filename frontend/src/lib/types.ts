@@ -3,6 +3,7 @@
 // User or Task data agrees on the exact same shape.
 
 export type ThemePreference = 'light' | 'dark';
+export type ColorMode = 'amber' | 'blue' | 'pink' | 'rose' | 'emerald' | 'black';
 
 export interface User {
   id: string;
@@ -10,6 +11,7 @@ export interface User {
   email: string | null;
   isGuest: boolean;
   theme: ThemePreference;
+  colorMode: ColorMode;
 }
 
 export type TaskStatus = 'todo' | 'in_progress' | 'done';
