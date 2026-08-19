@@ -12,6 +12,16 @@ export enum ThemePreference {
   DARK = 'dark',
 }
 
+// The accent color options shown in the Figma's "Color Mode" menu.
+export enum ColorMode {
+  AMBER = 'amber',
+  BLUE = 'blue',
+  PINK = 'pink',
+  ROSE = 'rose',
+  EMERALD = 'emerald',
+  BLACK = 'black',
+}
+
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -31,6 +41,12 @@ export class User {
 
   @Column({ type: 'varchar', default: ThemePreference.LIGHT })
   theme: ThemePreference;
+
+  // New: accent color, independent of light/dark mode.
+  // Defaults to Blue, matching what the Figma design shows
+  // as the default selected option.
+  @Column({ type: 'varchar', default: ColorMode.BLUE })
+  colorMode: ColorMode;
 
   @CreateDateColumn()
   createdAt: Date;

@@ -14,7 +14,7 @@ export class UsersController {
     @CurrentUserId() userId: string,
     @Body() dto: UpdateThemeDto,
   ) {
-    const user = await this.usersService.updateTheme(userId, dto.theme);
+    const user = await this.usersService.updateTheme(userId, dto);
     if (!user) return { user: null };
     return {
       user: {
@@ -23,6 +23,7 @@ export class UsersController {
         email: user.email,
         isGuest: user.isGuest,
         theme: user.theme,
+        colorMode: user.colorMode,
       },
     };
   }

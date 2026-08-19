@@ -1,10 +1,16 @@
-import { IsEnum } from 'class-validator';
-import { ThemePreference } from '../user.entity';
+import { IsEnum, IsOptional } from 'class-validator';
+import { ThemePreference, ColorMode } from '../user.entity';
 
 // Used for PATCH /users/me/theme
+// Both fields are optional so the frontend can update either
+// one independently — e.g. just switching Light/Dark without
+// touching the accent color, or vice versa.
 export class UpdateThemeDto {
-  // Ensures the value sent is EXACTLY 'light' or 'dark' —
-  // nothing else gets through validation.
+  @IsOptional()
   @IsEnum(ThemePreference)
-  theme: ThemePreference;
+  theme?: ThemePreference;
+
+  @IsOptional()
+  @IsEnum(ColorMode)
+  colorMode?: ColorMode;
 }
