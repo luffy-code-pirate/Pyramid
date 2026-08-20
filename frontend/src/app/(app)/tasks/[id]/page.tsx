@@ -7,8 +7,6 @@ import { Task, TaskStatus, TaskPriority } from '@/lib/types';
 import { Button } from '@/components/Button';
 
 export default function TaskDetailPage() {
-  // useParams reads the [id] segment from the URL — e.g. visiting
-  // /tasks/abc-123 gives us { id: 'abc-123' } here.
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
 
@@ -17,9 +15,6 @@ export default function TaskDetailPage() {
   const [error, setError] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
-  // Local editable copies of each field. We don't edit `task`
-  // directly — that way, if a save fails, the displayed data
-  // hasn't been silently corrupted.
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState<TaskStatus>('todo');
@@ -35,7 +30,6 @@ export default function TaskDetailPage() {
         setDescription(data.description ?? '');
         setStatus(data.status);
         setPriority(data.priority);
-        // Convert ISO datetime to YYYY-MM-DD for the date input.
         setDueDate(data.dueDate ? data.dueDate.split('T')[0] : '');
       } catch {
         setError('Task not found, or you don\'t have access to it.');
@@ -121,7 +115,7 @@ export default function TaskDetailPage() {
         className="w-full text-sm text-foreground bg-transparent outline-none resize-none border border-border rounded-lg p-3 mb-6 placeholder:text-muted"
       />
 
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         <div>
           <label className="text-xs text-muted block mb-1">Status</label>
           <select

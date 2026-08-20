@@ -19,14 +19,16 @@ export function Sidebar() {
   const { user, logout } = useAuth();
   const { theme, colorMode, setTheme, setColorMode } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
+  // Controls the mobile slide-in overlay — closed by default on
+  // small screens, irrelevant on md+ where the sidebar is always shown.
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   async function handleThemeToggle(newTheme: ThemePreference) {
     await setTheme(newTheme);
   }
 
-  return (
-    <aside className="w-60 border-r border-border bg-surface flex flex-col shrink-0">
-      {/* User menu at top */}
+  const sidebarContent = (
+    <>
       <div className="relative p-4 border-b border-border">
         <button
           onClick={() => setMenuOpen(!menuOpen)}
@@ -44,7 +46,7 @@ export function Sidebar() {
         </button>
 
         {menuOpen && (
-          <div className="absolute left-4 right-4 top-full mt-1 bg-background border border-border rounded-lg shadow-lg z-10 py-1">
+          <div className="absolute left-4 right-4 top-full mt-1 bg-background border border-border rounded-lg shadow-lg z-20 py-1">
             <div className="px-3 py-2 border-b border-border">
               <p className="text-sm font-medium text-foreground">{user?.name}</p>
               {user?.email && (
@@ -52,7 +54,6 @@ export function Sidebar() {
               )}
             </div>
 
-            {/* Theme (light/dark) toggle */}
             <div className="px-3 py-2">
               <p className="text-xs text-muted mb-1.5">Theme</p>
               <div className="flex gap-1">
@@ -79,7 +80,6 @@ export function Sidebar() {
               </div>
             </div>
 
-            {/* Color mode swatches */}
             <div className="px-3 py-2">
               <p className="text-xs text-muted mb-1.5">Color Mode</p>
               <div className="flex gap-1.5 flex-wrap">
@@ -109,16 +109,68 @@ export function Sidebar() {
         )}
       </div>
 
-      {/* Nav */}
       <nav className="flex-1 p-3">
         <p className="text-xs text-muted px-2 mb-1">Workspace</p>
         <Link
           href="/tasks"
+          onClick={() => setMobileOpen(false)}
           className="flex items-center gap-2 px-2 py-2 rounded-lg text-sm text-foreground hover:bg-background"
         >
           Tasks
         </Link>
       </nav>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* Mobile top bar — only visible below md breakpoint.
+          Gives access to the sidebar via a hamburger button
+          without permanently consuming screen width. */}
+      <div className="md:hidden flex items-center justify-between p-3 border-b border-border bg-surface">
+        <button
+          onClick={() => setMobileOpen(true)}
+          className="text-foreground p-1"
+          aria-label="Open menu"
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path
+              d="M2.5 5H17.5M2.5 10H17.5M2.5 15H17.5"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+          </svg>
+        </button>
+        <span className="text-sm font-medium text-foreground">Pyramid</span>
+        <div className="w-6" /> {/* spacer to balance the layout */}
+      </div>
+
+      {/* Desktop/tablet sidebar — always visible at md+ */}
+      <aside className="hidden md:flex w-60 border-r border-border bg-surface flex-col shrink-0">
+        {sidebarContent}
+      </aside>
+
+      {/* Mobile slide-in overlay sidebar */}
+      {mobileOpen && (
+        <div className="md:hidden fixed inset-0 z-30 flex">
+          {/* Backdrop — clicking it closes the menu */}
+          <div
+            className="fixed inset-0 bg-black/40"
+            onClick={() => setMobileOpen(false)}
+          />
+          <aside className="relative w-64 bg-surface border-r border-border flex flex-col z-40">
+            <button
+              onClick={() => setMobileOpen(false)}
+              className="absolute top-3 right-3 text-muted p-1"
+              aria-label="Close menu"
+            >
+              ✕
+            </button>
+            {sidebarContent}
+          </aside>
+        </div>
+      )}
+    </>
   );
 }
